@@ -7,6 +7,7 @@ function App({setLoggedin}: any) {
   const [productScraped, setProductScraped] = useState(false);
   const [productSaved, setProductSaved] = useState(false);
   const [invalidURL, setInvalidURL] = useState(false);
+  const [scrapingFailed, setScrapingFailed] = useState(false);
   const [productSaveFailed, setProductSaveFailed] = useState(false);
   const [product, setProduct] = useState({
     name: '',
@@ -100,6 +101,23 @@ function App({setLoggedin}: any) {
       return;
     }
 
+    if(
+        !name 
+        && !price 
+        && !image 
+        && !rating 
+        && !product_highlight 
+        && !seller 
+        && !seller_url 
+        && !return_policy 
+        && !delivery_type 
+        && !delivery_charge 
+        && !delivery_time
+      ) {
+      setScrapingFailed(true);
+      return;
+    }
+
     setProductScraped(true);
     setProduct({
       name,
@@ -158,7 +176,7 @@ function App({setLoggedin}: any) {
       <span onClick={logout} className='logout'>logout</span>
       <h2>Daraz Web Scraping</h2>
       {!invalidURL
-        ? <div className="card">
+        ? (!scrapingFailed ? <div className="card">
         {!productScraped ? <button onClick={scrapeProduct}>Grab Product</button> : ''}
         {productScraped ? <>
           <p>The details for the product</p>
@@ -170,9 +188,12 @@ function App({setLoggedin}: any) {
             {(productSaved && !productSaveFailed) ? <button onClick={clear}>View Saved</button> : ''}
             <button onClick={clear}>{productSaved ? 'Back' : 'Clear'}</button>
           </> :''}
-      </div>
+      </div> : <div className='card'>
+        <p>Can not grab product info from this page.</p>
+        <p>Please visit a product page and try again.</p>
+      </div>)
       :<div className='card'>
-        <p>The extension can not get product data from the current page.</p>
+        <p>The extension can only work with <kbd>daraz.com.np</kbd>.</p>
         <p>Please visit <a onClick={openDaraz}>daraz.com.np</a>, open a product and try again.</p>
       </div>}
     </>
