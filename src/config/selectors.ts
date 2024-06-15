@@ -10,8 +10,11 @@ interface ProductDetailSelectors {
     return_policy: string;
     alt_return_policy: string;
     delivery_type: string;
+    alt_delivery_type: string;
     delivery_charge: string;
+    alt_delivery_charge: string;
     delivery_time: string;
+    alt_delivery_time: string;
 }
 
 // Defining the selectors for various product details
@@ -38,9 +41,15 @@ const productDetailSelectors: ProductDetailSelectors = {
 
     delivery_type: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_standard div.delivery-option-item__body div.delivery-option-item__info div.delivery-option-item__title > span:nth-child(1)',
 
+    alt_delivery_type: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_express div.delivery-option-item__body div.delivery-option-item__info div.delivery-option-item__title > span:nth-child(1)',
+
     delivery_charge: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_standard div.delivery-option-item__body > div.delivery-option-item__shipping-fee',
 
-    delivery_time: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_standard div.delivery-option-item__body div.delivery-option-item__info > div.delivery-option-item__time'
+    alt_delivery_charge: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_express div.delivery-option-item__body > div.delivery-option-item__shipping-fee',
+
+    delivery_time: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_standard div.delivery-option-item__body div.delivery-option-item__info > div.delivery-option-item__time',
+
+    alt_delivery_time: 'body.pdp-layout-column-2:nth-child(2) div.pdp-block div.pdp-block.pdp-block__main-information:nth-child(3) div.pdp-block.pdp-block__main-information-detail:nth-child(2) div.pdp-block div.pdp-block.pdp-block__delivery-seller:nth-child(2) div.pdp-block.module:nth-child(1) div.delivery div.delivery__content div.delivery__options div.delivery__option:nth-child(1) div.delivery-option-item.delivery-option-item_type_express div.delivery-option-item__body div.delivery-option-item__info > div.delivery-option-item__time'
 };
 
 export { productDetailSelectors };

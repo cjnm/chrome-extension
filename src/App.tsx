@@ -1,10 +1,26 @@
-import './App.css'
+import { useState } from 'react';
 import { productDetailSelectors } from './config/selectors';
 
 function App() {
+  const [productScraped, setProductScraped] = useState(false);
+  const [productSaved, setProductSaved] = useState(false);
+  const [product, setProduct] = useState({
+    name: '',
+    price: '',
+    image: '',
+    rating: '',
+    product_highlight: '',
+    seller: '',
+    seller_url: '',
+    return_policy: '',
+    delivery_type: '',
+    delivery_charge: '',
+    delivery_time: '',
+    product_url: ''
+  });
 
   const scrapeProduct = async () => {
-    let [tab] = await chrome.tabs.query({ active: true });
+    const [tab] = await chrome.tabs.query({ active: true });
     chrome.scripting.executeScript<any[], void>({
       target: { tabId: tab.id! },
       args: [productDetailSelectors],
@@ -14,6 +30,7 @@ function App() {
 
   const getProductDeatil = (productDetailSelectors: any) => {
     const product_details = {
+      name: document.querySelector(productDetailSelectors.name)?.innerHTML || null,
       price: document.querySelector(productDetailSelectors.price)?.innerHTML || null,
       image: document.querySelector(productDetailSelectors.image)?.getAttribute('src') || null,
       rating: document.querySelector(productDetailSelectors.rating)?.innerHTML || null,
@@ -29,18 +46,25 @@ function App() {
       return_policy: document.querySelector(productDetailSelectors.return_policy)?.innerHTML
         || document.querySelector(productDetailSelectors.alt_return_policy)?.innerHTML
         || null,
-      delivery_type: document.querySelector(productDetailSelectors.delivery_type)?.innerHTML || null,
-      delivery_charge: document.querySelector(productDetailSelectors.delivery_charge)?.innerHTML || null,
-      delivery_time: document.querySelector(productDetailSelectors.delivery_time)?.innerHTML || null,
+      delivery_type: document.querySelector(productDetailSelectors.delivery_type)?.innerHTML
+        || document.querySelector(productDetailSelectors.alt_delivery_type)?.innerHTML
+        || null,
+      delivery_charge: document.querySelector(productDetailSelectors.delivery_charge)?.innerHTML
+        || document.querySelector(productDetailSelectors.alt_delivery_charge)?.innerHTML
+        || null,
+      delivery_time: document.querySelector(productDetailSelectors.delivery_time)?.innerHTML
+        || document.querySelector(productDetailSelectors.alt_delivery_time)?.innerHTML
+        || null,
       product_url: window.location.href
     }
 
-    chrome.runtime.sendMessage({...product_details})
+    chrome.runtime.sendMessage({ ...product_details })
   }
 
   //message listner
   chrome.runtime.onMessage.addListener((request) => {
     const {
+      name,
       price,
       image,
       rating,
@@ -54,7 +78,9 @@ function App() {
       product_url
     } = request;
 
-    console.log( {
+    setProductScraped(true);
+    setProduct({
+      name,
       price,
       image,
       rating,
@@ -69,14 +95,44 @@ function App() {
     });
   })
 
+  const clear = () => {
+    setProduct({
+      name: '',
+      price: '',
+      image: '',
+      rating: '',
+      product_highlight: '',
+      seller: '',
+      seller_url: '',
+      return_policy: '',
+      delivery_type: '',
+      delivery_charge: '',
+      delivery_time: '',
+      product_url: ''
+    });
+    setProductScraped(false);
+    setProductSaved(false);
+  }
+
+  const save = () => {
+    setProductSaved(true);
+  }
+
   return (
     <>
-      <h1>Daraz Web Scraping</h1>
+      <h2>Daraz Web Scraping</h2>
       <div className="card">
-        <button onClick={scrapeProduct}>
-          Check Page
-        </button>
-        <p>Product name: {'x'}</p>
+        {!productScraped ? <button onClick={scrapeProduct}>Grab Product</button> : ''}
+        {productScraped ? <>
+          <p>The details for the product</p>
+          <kbd>{product?.name}</kbd>
+          <p>has been captutured.</p>
+        </> : ''}
+          {productScraped ? <>
+            {!productSaved ? <button onClick={save}>Save</button> : <p style={{color: 'greenyellow', font: '11px'}}>Product Saved!</p>}
+            {productSaved ? <button onClick={clear}>View Saved</button> : ''}
+            <button onClick={clear}>{productSaved ? 'Back' : 'Clear'}</button>
+          </> :''}
       </div>
     </>
   )
