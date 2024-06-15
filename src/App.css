@@ -36,3 +36,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.logout {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  color: blueviolet
+}

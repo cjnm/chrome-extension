@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { productDetailSelectors } from './config/selectors';
+import { saveProductToDashboard } from './utils/product';
+import { logout as _logout } from './utils/auth';
 
-function App() {
+function App({setLoggedin}: any) {
   const [productScraped, setProductScraped] = useState(false);
   const [productSaved, setProductSaved] = useState(false);
+  const [invalidURL, setInvalidURL] = useState(false);
+  const [productSaveFailed, setProductSaveFailed] = useState(false);
   const [product, setProduct] = useState({
     name: '',
     price: '',
@@ -19,6 +23,15 @@ function App() {
     product_url: ''
   });
 
+  const isValidDarazUrl = (url: string) => {
+    try {
+      const _url = new URL(url);
+      return _url.hostname === 'www.daraz.com.np';
+    } catch (e) {
+      return false;
+    }
+  }
+
   const scrapeProduct = async () => {
     const [tab] = await chrome.tabs.query({ active: true });
     chrome.scripting.executeScript<any[], void>({
@@ -26,6 +39,10 @@ function App() {
       args: [productDetailSelectors],
       func: getProductDeatil
     });
+  }
+
+  const openDaraz = async () => {
+    chrome.tabs.create({ url: 'https://daraz.com.np' });
   }
 
   const getProductDeatil = (productDetailSelectors: any) => {
@@ -78,6 +95,11 @@ function App() {
       product_url
     } = request;
 
+    if(!isValidDarazUrl(product_url)) {
+      setInvalidURL(true);
+      return;
+    }
+
     setProductScraped(true);
     setProduct({
       name,
@@ -112,16 +134,31 @@ function App() {
     });
     setProductScraped(false);
     setProductSaved(false);
+    setProductSaveFailed(false);
+  }
+
+  const logout = () => {
+    _logout();
+    setLoggedin(false);
   }
 
   const save = () => {
-    setProductSaved(true);
+    saveProductToDashboard(product).then(response => {
+      if(response) {
+        setProductSaved(true);
+      } else {
+        setProductSaved(true);
+        setProductSaveFailed(true);
+      }
+    });
   }
 
   return (
     <>
+      <span onClick={logout} className='logout'>logout</span>
       <h2>Daraz Web Scraping</h2>
-      <div className="card">
+      {!invalidURL
+        ? <div className="card">
         {!productScraped ? <button onClick={scrapeProduct}>Grab Product</button> : ''}
         {productScraped ? <>
           <p>The details for the product</p>
@@ -129,11 +166,15 @@ function App() {
           <p>has been captutured.</p>
         </> : ''}
           {productScraped ? <>
-            {!productSaved ? <button onClick={save}>Save</button> : <p style={{color: 'greenyellow', font: '11px'}}>Product Saved!</p>}
-            {productSaved ? <button onClick={clear}>View Saved</button> : ''}
+            {!productSaved ? <button onClick={save}>Save</button> : <p style={{color: `${productSaveFailed ? 'red' : 'greenyellow'}`, font: '11px'}}>{productSaveFailed ? 'Failed to save product.' : 'Product Saved.'}</p>}
+            {(productSaved && !productSaveFailed) ? <button onClick={clear}>View Saved</button> : ''}
             <button onClick={clear}>{productSaved ? 'Back' : 'Clear'}</button>
           </> :''}
       </div>
+      :<div className='card'>
+        <p>The extension can not get product data from the current page.</p>
+        <p>Please visit <a onClick={openDaraz}>daraz.com.np</a>, open a product and try again.</p>
+      </div>}
     </>
   )
 }

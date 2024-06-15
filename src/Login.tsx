@@ -89,7 +89,7 @@ export default function Login() {
       </>
     )
   } else if (!loading && loggedin) {
-    return <App />
+    return <App setLoggedin={setLoggedin}/>
   } else if (!loading && !loggedin) {
     return (
       <>
