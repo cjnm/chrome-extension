@@ -1,30 +1,59 @@
-# React + TypeScript + Vite
+# chrome-etension
+Refer to the url for full reference to get started: https://docs.google.com/document/d/1lPFYRsUo63pdXKyMVWnuTjfnLGnZcl9Vc9TuF5bSecY/edit?usp=sharing
+Chrome Extension Backend Repo URL: https://github.com/cjnm/chrome-extension-backend
+Chrome Extension Backend Dashboard: https://chrome-extension-backend-phi.vercel.app/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Download URL
+https://github.com/cjnm/chrome-extension/releases/download/v1.0.0/v1.0.0.zip
 
-Currently, two official plugins are available:
+## Introduction
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The chrome extension has been created with React and Vite, using Manifest V3 api.
+The user need to first login to the backend (https://chrome-extension-backend-phi.vercel.app/), navigate to `Chrome Extension` page, copy the token and paste it to the extension for auth. The token is the validated with the backend and the user is ready to go.
+The user can navigate it to any daraz.com.np product page, grab the product with the extension and save it to backend.
 
-## Expanding the ESLint configuration
+All the backend request are authenticated and the user have an option to logout and authenticate with different token for different user account.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+The features of the Extension are:
 
-- Configure the top-level `parserOptions` property like this:
+- User Authentication, login and logout
+- Authenticated Requests
+- Success and error messages
+- Message when the extension is not being used in correct page
+- Feature to navigate to dashboard to view recently saved product
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+
+## Setup
+
+### Prerequisite
+
+- Chrome Browser
+
+### Building From Scratch
+
+
+- Install dependency
+
+```
+yarn
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+- Build the project
+
+```
+yarn build
+```
+
+The built files cound be accessed from `/dist` directory. Prebuilt package cound be downloaded form, https://github.com/cjnm/chrome-extension/releases/download/v1.0.0/v1.0.0.zip, extracted and added to chrome.
+
+## Adding to Chrome
+- Navigate to `chrome://extensions/`
+- Enable `Developer Mode` from top right side of the page
+- Load the Extension from `Load Unpacked` button on top left.
+
+## Using app
+- Login to the app backend (https://chrome-extension-backend-phi.vercel.app)
+- Navigate to `Chrome Extension`
+- Copy the token and paste it to extension to login
+- Navigate to daraz.com.np product page and start grabbing products
