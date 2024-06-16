@@ -7,7 +7,6 @@ import Login from './Login.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* <App /> */}
     <Login />
   </React.StrictMode>,
 )

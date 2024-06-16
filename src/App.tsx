@@ -3,7 +3,7 @@ import { productDetailSelectors } from './config/selectors';
 import { saveProductToDashboard } from './utils/product';
 import { logout as _logout } from './utils/auth';
 
-function App({setLoggedin}: any) {
+function App({ setLoggedin }: any) {
   const [productScraped, setProductScraped] = useState(false);
   const [productSaved, setProductSaved] = useState(false);
   const [invalidURL, setInvalidURL] = useState(false);
@@ -44,6 +44,14 @@ function App({setLoggedin}: any) {
 
   const openDaraz = async () => {
     chrome.tabs.create({ url: 'https://daraz.com.np' });
+  }
+
+  const openDashboard = () => {
+    const localUser = typeof window !== "undefined" ? localStorage.getItem('main-chrome-extension-user') : null;
+    if (localUser) {
+      const { url } = JSON.parse(localUser);
+      chrome.tabs.create({ url });
+    }
   }
 
   const getProductDeatil = (productDetailSelectors: any) => {
@@ -96,24 +104,24 @@ function App({setLoggedin}: any) {
       product_url
     } = request;
 
-    if(!isValidDarazUrl(product_url)) {
+    if (!isValidDarazUrl(product_url)) {
       setInvalidURL(true);
       return;
     }
 
-    if(
-        !name 
-        && !price 
-        && !image 
-        && !rating 
-        && !product_highlight 
-        && !seller 
-        && !seller_url 
-        && !return_policy 
-        && !delivery_type 
-        && !delivery_charge 
-        && !delivery_time
-      ) {
+    if (
+      !name
+      && !price
+      && !image
+      && !rating
+      && !product_highlight
+      && !seller
+      && !seller_url
+      && !return_policy
+      && !delivery_type
+      && !delivery_charge
+      && !delivery_time
+    ) {
       setScrapingFailed(true);
       return;
     }
@@ -162,7 +170,7 @@ function App({setLoggedin}: any) {
 
   const save = () => {
     saveProductToDashboard(product).then(response => {
-      if(response) {
+      if (response) {
         setProductSaved(true);
       } else {
         setProductSaved(true);
@@ -173,29 +181,29 @@ function App({setLoggedin}: any) {
 
   return (
     <>
-      <span onClick={logout} className='logout'>logout</span>
+      <span onClick={logout} className='logout' style={{ cursor: 'pointer' }}>logout</span>
       <h2>Daraz Web Scraping</h2>
       {!invalidURL
         ? (!scrapingFailed ? <div className="card">
-        {!productScraped ? <button onClick={scrapeProduct}>Grab Product</button> : ''}
-        {productScraped ? <>
-          <p>The details for the product</p>
-          <kbd>{product?.name}</kbd>
-          <p>has been captutured.</p>
-        </> : ''}
+          {!productScraped ? <button onClick={scrapeProduct}>Grab Product</button> : ''}
           {productScraped ? <>
-            {!productSaved ? <button onClick={save}>Save</button> : <p style={{color: `${productSaveFailed ? 'red' : 'greenyellow'}`, font: '11px'}}>{productSaveFailed ? 'Failed to save product.' : 'Product Saved.'}</p>}
-            {(productSaved && !productSaveFailed) ? <button onClick={clear}>View Saved</button> : ''}
+            <p>The details for the product</p>
+            <kbd>{product?.name}</kbd>
+            <p>has been captutured.</p>
+          </> : ''}
+          {productScraped ? <>
+            {!productSaved ? <button onClick={save}>Save</button> : <p style={{ color: `${productSaveFailed ? 'red' : 'green'}`, fontSize: '16px' }}>{productSaveFailed ? 'Failed to save product.' : 'Product Saved.'}</p>}
+            {(productSaved && !productSaveFailed) ? <button onClick={openDashboard}>View Dashboard</button> : ''}
             <button onClick={clear}>{productSaved ? 'Back' : 'Clear'}</button>
-          </> :''}
-      </div> : <div className='card'>
-        <p>Can not grab product info from this page.</p>
-        <p>Please visit a product page and try again.</p>
-      </div>)
-      :<div className='card'>
-        <p>The extension can only work with <kbd>daraz.com.np</kbd>.</p>
-        <p>Please visit <a onClick={openDaraz}>daraz.com.np</a>, open a product and try again.</p>
-      </div>}
+          </> : ''}
+        </div> : <div className='card'>
+          <p>Can not grab product info from this page.</p>
+          <p>Please visit a product page and try again.</p>
+        </div>)
+        : <div className='card'>
+          <p>The extension can only work with <kbd>daraz.com.np</kbd>.</p>
+          <p>Please visit <a onClick={openDaraz}>daraz.com.np</a>, open a product and try again.</p>
+        </div>}
     </>
   )
 }
