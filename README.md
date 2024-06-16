@@ -1,4 +1,4 @@
-# chrome-etension
+# chrome-extension
 Refer to the url for full reference to get started: https://docs.google.com/document/d/1lPFYRsUo63pdXKyMVWnuTjfnLGnZcl9Vc9TuF5bSecY/edit?usp=sharing
 Chrome Extension Backend Repo URL: https://github.com/cjnm/chrome-extension-backend
 Chrome Extension Backend Dashboard: https://chrome-extension-backend-phi.vercel.app/
